@@ -1,0 +1,103 @@
+---
+#
+# This is the canonical configuration for the `README.md`
+# Run `make readme` to rebuild the `README.md`
+#
+
+# Name of this project
+name: terraform-acme-certs
+
+# License of this project
+license: "APGL3"
+
+# Canonical GitLab repo
+gitlab_repo: guardianproject-ops/terraform-acme-certs
+
+# Badges to display
+badges: []
+
+# Short description of this project
+description: |-
+
+  This is a terraform module that creates an acme account registration and TLS
+  certificates using cloudflare for verification.
+
+introduction: |-
+
+  This one-stop module will manage your acme registration and issue+renew
+  certificates.
+
+  It is assumed you want to maintain the same private key across renewals, so
+  you must pass the private key. You can use the tls provider to generate them,
+  or openssl.
+
+  Example: genereate an P256 key with:
+  ```
+  openssl ecparam -name prime256v1 -genkey -noout
+  ```
+
+  Example: generate an rsa key (suitable for the acme account key)
+
+  ```
+  openssl genrsa 4096
+  ```
+
+# How to use this project
+usage: |-
+
+  The tag below is not up to date. Check the repo for the latest version.
+
+  NOTE: It is not a good practice to use the same private key for both your
+  account and your certificate. Make sure you use different keys.
+
+
+  ```hcl
+  module "certs" {
+    source  = "git::https://gitlab.com/guardianproject-ops/terraform-acme-certs?ref=tags/0.1.0"
+
+    account_key_pem = ...
+    email_address = ...
+
+    cloudflare_dns_api_token = ...
+    cloudflare_zone_api_token = ...
+
+    certs = {
+      "foo" = {
+        common_name = "foo.com"
+        dns_names =  ["a.foo.com", "b.foo.com"]
+        tls_private_key = <<EOF
+  -----BEGIN EC PRIVATE KEY-----
+  MHcCAQEEICvHtJfdSIk2Y8ZvT397z0vOIYNteNc3lZ+EcHX046GUoAoGCCqGSM49
+  AwEHoUQDQgAEeM9lo9ok1gxEb1WpZdBnhaB8bzbzhhqKpk97GoWpoht9Pd/PowMT
+  QY+vc+WYCJVWfSbA+M6cPDoSMF8AGZ/QpQ==
+  -----END EC PRIVATE KEY-----
+  EOF
+        tls_private_key_algo = "P256"
+        force_renewal = false
+      }
+
+      "bar" = {
+        common_name = "bar.foo.com"
+        dns_names =  ["a.bar.foo.com", "b.bar.foo.com"]
+        tls_private_key = ...
+        tls_private_key_algo = ...
+        force_renewal = false
+      }
+    }
+
+    context = module.this.context
+  }
+  ```
+
+related: []
+
+include:
+  - "docs/terraform.md"
+
+funded_by_cdr: false
+
+# Contributors to this project
+contributors:
+  - name: "Abel Luck"
+    gitlab: "abelxluck"
+    gravatar: 0f605397e0ead93a68e1be26dc26481a
