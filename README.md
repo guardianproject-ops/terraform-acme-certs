@@ -72,6 +72,9 @@ It is assumed you want to maintain the same private key across renewals, so
 you must pass the private key. You can use the tls provider to generate them,
 or openssl.
 
+**NOTE**: It is not a good practice to use the same private key for both your
+account and your certificate. Make sure you use different keys.
+
 Example: genereate an P256 key with:
 ```
 openssl ecparam -name prime256v1 -genkey -noout
@@ -89,19 +92,14 @@ openssl genrsa 4096
 
 
 **IMPORTANT:** The `master` branch is used in `source` just as an example. In your code, do not pin to `master` because there may be breaking changes between releases.
-Instead pin to the release tag (e.g. `?ref=tags/x.y.z`) of one of our [latest releases](https://gitlab.com/guardianproject-ops/terraform-acme-certs/releases).
+Instead pin to the release tag (e.g. `?ref=tags/x.y.z`) of one of our [latest releases](https://gitlab.com/guardianproject-ops/terraform-acme-certs/-/tags).
 
 
-
-The tag below is not up to date. Check the repo for the latest version.
-
-NOTE: It is not a good practice to use the same private key for both your
-account and your certificate. Make sure you use different keys.
 
 
 ```hcl
 module "certs" {
-  source  = "git::https://gitlab.com/guardianproject-ops/terraform-acme-certs?ref=tags/0.1.0"
+  source  = "git::https://gitlab.com/guardianproject-ops/terraform-acme-certs?ref=master"
 
   account_key_pem = ...
   email_address = ...
